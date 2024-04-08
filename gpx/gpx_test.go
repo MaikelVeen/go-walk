@@ -13,8 +13,24 @@ func TestUnmarshalGPX(t *testing.T) {
 	t.Parallel()
 
 	validGPXData := `<?xml version="1.0" encoding="UTF-8"?>
-<gpx creator="TestCreator" version="1.1">
-</gpx>`
+	<gpx creator="TestCreator" version="1.1">
+	  <trk>
+		<name>Rotterdam Walking</name>
+		<type>walking</type>
+		<trkseg>
+		  <trkpt lat="51.9237274490296840667724609375" lon="4.4737290032207965850830078125">
+			<ele>23</ele>
+			<time>2024-04-08T19:23:26.000Z</time>
+			<extensions>
+			  <ns3:TrackPointExtension>
+				<ns3:hr>119</ns3:hr>
+			  </ns3:TrackPointExtension>
+			</extensions>
+		  </trkpt>
+		</trkseg>
+	  </trk>
+	</gpx>`
+
 	invalidXMLData := `<?xml version="1.0" encoding="UTF-8"?>
 <gpx creator="TestCreator" version="1.1">`
 	emptyGPXData := ``
@@ -37,6 +53,20 @@ func TestUnmarshalGPX(t *testing.T) {
 				XMLName: xml.Name{Local: "gpx"},
 				Creator: "TestCreator",
 				Version: "1.1",
+				Tracks: []Track{{
+					Name: "Rotterdam Walking",
+					Type: "walking",
+					Segments: []TrackSegment{
+						{
+							Points: []TrackPoint{
+								TrackPoint{
+									Latitude:  51.9237274490296840667724609375,
+									Longitude: 4.4737290032207965850830078125,
+								},
+							},
+						},
+					},
+				}},
 			},
 			wantErr: false,
 		},
