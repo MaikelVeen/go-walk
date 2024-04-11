@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -21,7 +20,7 @@ func main() {
 
 	logger.Info("Hello World!")
 
-	walkData, err := processGPXFiles()
+	walkData, err := ReadGPXFilesInFolder("./data")
 	if err != nil {
 		slog.Error(err.Error())
 	}
@@ -38,9 +37,10 @@ func main() {
 	}
 }
 
-// TODO: Make the folder an argument.
-func processGPXFiles() ([]*gpx.GPX, error) {
-	files, err := os.ReadDir("data")
+// ReadGPXFilesInFolder processes GPX files from a specified folder.
+// It returns a slice of GPX structs and any error encountered.
+func ReadGPXFilesInFolder(folderPath string) ([]*gpx.GPX, error) {
+	files, err := os.ReadDir(folderPath)
 	if err != nil {
 		return nil, err
 	}
@@ -48,12 +48,7 @@ func processGPXFiles() ([]*gpx.GPX, error) {
 	var gpxArray []*gpx.GPX
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".gpx" {
-			gpxFile, err := os.Open(fmt.Sprintf("./data/%s", file.Name()))
-			if err != nil {
-				return nil, err
-			}
-
-			g, err := gpx.UnmarshalGPX(gpxFile)
+			g, err := ReadGPXFile(filepath.Join(folderPath, file.Name()))
 			if err != nil {
 				return nil, err
 			}
@@ -63,4 +58,20 @@ func processGPXFiles() ([]*gpx.GPX, error) {
 	}
 
 	return gpxArray, nil
+}
+
+// ReadGPXFile reads a GPX file from the specified file path and returns a parsed GPX object.
+// If the file cannot be opened or if there is an error parsing the GPX file, an error is returned.
+func ReadGPXFile(filePath string) (*gpx.GPX, error) {
+	gpxFile, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	g, err := gpx.UnmarshalGPX(gpxFile)
+	if err != nil {
+		return nil, err
+	}
+
+	return g, nil
 }
