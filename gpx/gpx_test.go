@@ -56,10 +56,10 @@ func TestUnmarshalGPX(t *testing.T) {
 				Tracks: []Track{{
 					Name: "Rotterdam Walking",
 					Type: "walking",
-					Segments: []TrackSegment{
+					Segments: []Segment{
 						{
-							Points: []TrackPoint{
-								TrackPoint{
+							Points: []Point{
+								Point{
 									Latitude:  51.9237274490296840667724609375,
 									Longitude: 4.4737290032207965850830078125,
 								},
@@ -98,4 +98,50 @@ func TestUnmarshalGPX(t *testing.T) {
 			assert.EqualValues(t, tt.want, got)
 		})
 	}
+}
+func TestGPX_Points(t *testing.T) {
+	t.Parallel()
+
+	gpx := &GPX{
+		Tracks: []Track{
+			{
+				Segments: []Segment{
+					{
+						Points: []Point{
+							{
+								Latitude:  51.9237274490296840667724609375,
+								Longitude: 4.4737290032207965850830078125,
+							},
+						},
+					},
+				},
+			},
+			{
+				Segments: []Segment{
+					{
+						Points: []Point{
+							{
+								Latitude:  51.9237274490296840667724609375,
+								Longitude: 4.4737290032207965850830078125,
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	want := []Point{
+		{
+			Latitude:  51.9237274490296840667724609375,
+			Longitude: 4.4737290032207965850830078125,
+		},
+		{
+			Latitude:  51.9237274490296840667724609375,
+			Longitude: 4.4737290032207965850830078125,
+		},
+	}
+
+	got := gpx.Points()
+	assert.EqualValues(t, want, got)
 }

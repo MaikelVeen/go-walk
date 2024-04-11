@@ -13,22 +13,17 @@ type GPX struct {
 	Tracks  []Track  `xml:"trk"`
 }
 
-// Track is a track in a GPX file, containing one or many segments.
-type Track struct {
-	Name     string         `xml:"name"`
-	Type     string         `xml:"type"`
-	Segments []TrackSegment `xml:"trkseg"`
-}
+// Points returns all the points of all the segments in the
+// tracks of this GPX.
+func (g *GPX) Points() []Point {
+	var points []Point
+	for _, track := range g.Tracks {
+		for _, segment := range track.Segments {
+			points = append(points, segment.Points...)
+		}
+	}
 
-// TrackSegement is a segement of a Track, containing one or many TrackPoints.
-type TrackSegment struct {
-	Points []TrackPoint `xml:"trkpt"`
-}
-
-// TrackPoint is a single point within a segment.
-type TrackPoint struct {
-	Latitude  float64 `xml:"lat,attr"`
-	Longitude float64 `xml:"lon,attr"`
+	return points
 }
 
 // UnmarshalGPX reads and parses the GPX data from the provided io.ReadCloser.
