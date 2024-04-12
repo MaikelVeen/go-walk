@@ -15,8 +15,8 @@ type GPX struct {
 
 // Points returns all the points of all the segments in the
 // tracks of this GPX.
-func (g *GPX) Points() []Point {
-	var points []Point
+func (g *GPX) Points() []LatLng {
+	var points []LatLng
 	for _, track := range g.Tracks {
 		for _, segment := range track.Segments {
 			points = append(points, segment.Points...)

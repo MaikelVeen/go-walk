@@ -21,3 +21,6 @@
 go.work
 
 *.gpx
+*.png
+launch.json
+.DS_STORE

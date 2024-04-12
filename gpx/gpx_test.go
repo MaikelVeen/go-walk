@@ -58,8 +58,8 @@ func TestUnmarshalGPX(t *testing.T) {
 					Type: "walking",
 					Segments: []Segment{
 						{
-							Points: []Point{
-								Point{
+							Points: []LatLng{
+								{
 									Latitude:  51.9237274490296840667724609375,
 									Longitude: 4.4737290032207965850830078125,
 								},
@@ -107,7 +107,7 @@ func TestGPX_Points(t *testing.T) {
 			{
 				Segments: []Segment{
 					{
-						Points: []Point{
+						Points: []LatLng{
 							{
 								Latitude:  51.9237274490296840667724609375,
 								Longitude: 4.4737290032207965850830078125,
@@ -119,7 +119,7 @@ func TestGPX_Points(t *testing.T) {
 			{
 				Segments: []Segment{
 					{
-						Points: []Point{
+						Points: []LatLng{
 							{
 								Latitude:  51.9237274490296840667724609375,
 								Longitude: 4.4737290032207965850830078125,
@@ -131,7 +131,7 @@ func TestGPX_Points(t *testing.T) {
 		},
 	}
 
-	want := []Point{
+	want := []LatLng{
 		{
 			Latitude:  51.9237274490296840667724609375,
 			Longitude: 4.4737290032207965850830078125,

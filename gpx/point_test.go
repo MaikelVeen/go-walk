@@ -8,12 +8,12 @@ import (
 )
 
 func TestPointDistance(t *testing.T) {
-	pointA := Point{
+	pointA := LatLng{
 		Latitude:  51.924373269285844,
 		Longitude: 4.469002690910358,
 	}
 
-	pointB := Point{
+	pointB := LatLng{
 		Latitude:  51.92308253810835,
 		Longitude: 4.469793977934499,
 	}

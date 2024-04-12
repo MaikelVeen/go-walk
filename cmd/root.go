@@ -16,5 +16,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(NewExtractCommand().Command)
+	rootCmd.AddCommand(NewVisualiseCommand().Command)
 }
