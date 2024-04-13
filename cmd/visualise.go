@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"math"
 	"os"
 	"path/filepath"
@@ -11,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// VisualiseCommand represents a command for visualizing a directory.
+// VisualiseCommand represents a command for visualizing a directory of GPX files.
 type VisualiseCommand struct {
 	Command *cobra.Command
 
@@ -27,15 +28,16 @@ type VisualiseCommand struct {
 func NewVisualiseCommand() *VisualiseCommand {
 	ec := &VisualiseCommand{}
 	ec.Command = &cobra.Command{
-		Use:   "visualise [-d Dir | -o Output | -z Zoom]",
-		Short: "Visualise coordinates parsed from gpx files",
-		RunE:  ec.Run,
-		Args:  cobra.NoArgs,
+		Use:          "visualise [-d Dir | -o Output | -z Zoom]",
+		Short:        "Visualise coordinates parsed from gpx files",
+		RunE:         ec.Run,
+		Args:         cobra.NoArgs,
+		SilenceUsage: true,
 	}
 
-	ec.Command.Flags().IntVarP(&ec.ZoomLevel, "zoom", "z", 16, "Determines the zoom level of the final projection")
-	ec.Command.Flags().StringVarP(&ec.Directory, "dir", "d", "./data", "The path of the directory where the GXP files are located")
-	// TODO: OutputFilename
+	ec.Command.Flags().IntVarP(&ec.ZoomLevel, "zoom", "z", 14, "Determines the zoom level of the final projection")
+	ec.Command.Flags().StringVarP(&ec.Directory, "dir", "d", ".", "The path of the directory where the GXP files are located")
+	ec.Command.Flags().StringVarP(&ec.OutputFilename, "out", "o", "output", "The filename of the created image")
 	return ec
 }
 
@@ -44,6 +46,11 @@ func (c *VisualiseCommand) Run(cmd *cobra.Command, args []string) error {
 	data, err := readGPXFilesInFolder(c.Directory)
 	if err != nil {
 		return err
+	}
+
+	if len(data) == 0 {
+		path, _ := filepath.Abs(c.Directory)
+		return fmt.Errorf("could not find any gpx files in %s", path)
 	}
 
 	var points []gpx.LatLng
@@ -97,7 +104,7 @@ func (c *VisualiseCommand) Run(cmd *cobra.Command, args []string) error {
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	dc.SetRGB(0, 0, 0)
-	dc.SetLineWidth(5) // TODO: Make configurable
+	dc.SetLineWidth(4) // TODO: Make configurable
 
 	if len(pixels) > 0 {
 		dc.MoveTo(pixels[0].X, pixels[0].Y) // move to the start point
