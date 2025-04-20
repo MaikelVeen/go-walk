@@ -15,4 +15,5 @@ func Execute() {
 
 func init() {
 	rootCmd.AddCommand(NewVisualiseCommand().Command)
+	rootCmd.AddCommand(NewTransformCommand().Command)
 }
